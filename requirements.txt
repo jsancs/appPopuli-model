@@ -1,5 +1,1 @@
-tensorflow==2.13.0
-flask==2.3.3
-flask-cors==3.0.10
-gevent==23.9.1
-Pillow==8.4.0
+modal==0.62.36
