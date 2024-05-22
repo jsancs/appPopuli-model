@@ -48,8 +48,9 @@ def web():
                 )
 
             # Se predice la clase de la imagen y se devuelve el nombre de la plaga detectada
-            output = model.generate.remote(image_base64)
-            return {"estado": "ok", "resultado": output}
+            class_name, confidence = model.generate.remote(image_base64)
+            result = f"{class_name} ({confidence:.2f}%)"
+            return {"estado": "ok", "resultado": result}
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error en el engine: {str(e)}")

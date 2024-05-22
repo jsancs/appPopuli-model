@@ -95,8 +95,9 @@ class AppPopuliModel:
         # Convertimos el output en la plaga correspondiente
         class_idx = tf.argmax(logits, axis=1).numpy()[0]
         class_name = self.plagas[class_idx]
+        confidence = logits[0][class_idx] * 100
 
-        return class_name
+        return class_name, confidence
 
 
 #! Este método solo se ejecuta al hacer `modal run setup_apppopuli` (para probar)
