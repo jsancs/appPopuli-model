@@ -1,23 +1,26 @@
 from modal import asgi_app
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
 from .setup_apppopuli import AppPopuliModel
 from .common import app
 
 
-@app.function(
-    scaledown_window=300,
-    timeout=600,
-)
+class PredictRequest(BaseModel):
+    image: str
+
+
+origins = [
+    "https://test.apppopuli.es",
+    "https://apppopuli.es",
+]
+
+
+@app.function(scaledown_window=300, timeout=600)
 @asgi_app()
 def web():
-    from fastapi import FastAPI, HTTPException, Request
-    from fastapi.middleware.cors import CORSMiddleware
-
-    # Config del servidor
-    web_app = FastAPI()
-    # Config de CORS
-    origins = [
-        "https://test.apppopuli.es",
-    ]
+    web_app = FastAPI(title="AppPopuli Model API")
 
     web_app.add_middleware(
         CORSMiddleware,
@@ -27,7 +30,6 @@ def web():
         allow_headers=["*"],
     )
 
-    # Modelo para predicciones
     model = AppPopuliModel()
 
     @web_app.get("/")
@@ -37,21 +39,22 @@ def web():
     @web_app.post("/api")
     async def api(request: Request):
         try:
-            # Leer la imagen del body
             data = await request.json()
             image_base64 = data.get("image")
 
-            # Si no se pasa imagen se devuelve un error
             if image_base64 is None:
                 raise HTTPException(
                     status_code=400, detail="No se proporcionó una imagen"
                 )
 
-            # Se predice la clase de la imagen y se devuelve el nombre de la plaga detectada
             class_name, confidence = model.generate.remote(image_base64)
-            result = f"{class_name} ({confidence:.2f}%)"
-            return {"estado": "ok", "resultado": result}
+            return {
+                "estado": "ok",
+                "resultado": f"{class_name} ({confidence:.2f}%)",
+            }
 
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error en el engine: {str(e)}")
 
