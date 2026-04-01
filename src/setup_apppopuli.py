@@ -38,48 +38,43 @@ def resizeImages(img_b64):
     },
 )
 class AppPopuliModel:
-    def __enter__(self):
-        # Cuando se llama a la máquina con el modelo se recarga el volumen con los ficheros del modelo
-        app.model_volume.reload()
+    plagas = [
+        "Archips xylosteana",
+        "Cerura iberica",
+        "Chrysomela populi",
+        "Cossus cossus",
+        "Crepidodera spp",
+        "Cryptorhynchus lapathi",
+        "Cytospora chrysosperma",
+        "Dothichiza populea",
+        "Gypsonoma aceriana",
+        "Laothoe populi",
+        "Lepidosaphes ulmi",
+        "Leucoma salicis",
+        "Lonsdalea quercina subsp populi",
+        "Marssonina brunnea",
+        "Melampsora spp",
+        "Melanophila picta",
+        "Paranthrene tabaniformis",
+        "Pemphigus spp",
+        "Phloemyzus passerinii",
+        "Phratora laticolis",
+        "SANO",
+        "Saperda carcharias",
+        "Saperda populnea",
+        "Sesia apiformis",
+        "Taphrina populnea (Taphrina aurea)",
+        "Trypophloeus spp",
+        "Venturia populina",
+        "Xanthomonas populi",
+    ]
 
-    def __init__(self):
-        # Al instanciar el modelo lo cargamos en memoria
+    def __enter__(self):
         import tensorflow as tf
 
+        app.model_volume.reload()
         with tf.device("/gpu:0"):
             self.model = tf.keras.models.load_model(f"{MODEL_DIR_BASE}/model/modelo.h5")
-
-        # Lista de plagas que detecta el modelo
-        self.plagas = [
-            "Archips xylosteana",
-            "Cerura iberica",
-            "Chrysomela populi",
-            "Cossus cossus",
-            "Crepidodera spp",
-            "Cryptorhynchus lapathi",
-            "Cytospora chrysosperma",
-            "Dothichiza populea",
-            "Gypsonoma aceriana",
-            "Laothoe populi",
-            "Lepidosaphes ulmi",
-            "Leucoma salicis",
-            "Lonsdalea quercina subsp populi",
-            "Marssonina brunnea",
-            "Melampsora spp",
-            "Melanophila picta",
-            "Paranthrene tabaniformis",
-            "Pemphigus spp",
-            "Phloemyzus passerinii",
-            "Phratora laticolis",
-            "SANO",
-            "Saperda carcharias",
-            "Saperda populnea",
-            "Sesia apiformis",
-            "Taphrina populnea (Taphrina aurea)",
-            "Trypophloeus spp",
-            "Venturia populina",
-            "Xanthomonas populi",
-        ]
 
     @method()
     def generate(self, image):

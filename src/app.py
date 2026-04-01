@@ -4,7 +4,7 @@ from .common import app
 
 
 @app.function(
-    container_idle_timeout=300,
+    scaledown_window=300,
     timeout=600,
 )
 @asgi_app()
