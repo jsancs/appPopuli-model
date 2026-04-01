@@ -1,15 +1,6 @@
 from modal import asgi_app
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-
 from .setup_apppopuli import AppPopuliModel
 from .common import app
-
-
-class PredictRequest(BaseModel):
-    image: str
-
 
 origins = [
     "https://test.apppopuli.es",
@@ -20,6 +11,9 @@ origins = [
 @app.function(scaledown_window=300, timeout=600)
 @asgi_app()
 def web():
+    from fastapi import FastAPI, HTTPException, Request
+    from fastapi.middleware.cors import CORSMiddleware
+
     web_app = FastAPI(title="AppPopuli Model API")
 
     web_app.add_middleware(
