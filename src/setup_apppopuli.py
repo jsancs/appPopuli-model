@@ -1,5 +1,5 @@
 from modal import method, Volume
-from .common import stub
+from .common import app
 
 import os
 import base64
@@ -7,7 +7,7 @@ import base64
 MODELS_VOLUME = "model-appPopuli"
 MODEL_DIR_BASE = "/vol/base-models"
 
-stub.model_volume = Volume.from_name(MODELS_VOLUME)
+app.model_volume = Volume.from_name(MODELS_VOLUME)
 
 
 # Método para preprocesar las imágenes al formato del modelo
@@ -30,17 +30,17 @@ def resizeImages(img_b64):
 
 
 # Clase que ejecuta el modelo en la máquina de modal con GPU
-@stub.cls(
-    gpu="T4",  # GPU a usar
-    cpu=1.0,  # Num de cpus a usar (como solo queremos las predicciones podemos dejarlo en 1)
+@app.cls(
+    gpu="T4",
+    cpu=1.0,
     volumes={
-        MODEL_DIR_BASE: stub.model_volume,  # Almacenamiento del modelo
+        MODEL_DIR_BASE: app.model_volume,
     },
 )
 class AppPopuliModel:
     def __enter__(self):
         # Cuando se llama a la máquina con el modelo se recarga el volumen con los ficheros del modelo
-        stub.model_volume.reload()
+        app.model_volume.reload()
 
     def __init__(self):
         # Al instanciar el modelo lo cargamos en memoria
@@ -101,7 +101,7 @@ class AppPopuliModel:
 
 
 #! Este método solo se ejecuta al hacer `modal run setup_apppopuli` (para probar)
-@stub.local_entrypoint()
+@app.local_entrypoint()
 def main():
     model = AppPopuliModel()
 

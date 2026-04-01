@@ -1,9 +1,9 @@
 from modal import asgi_app
 from .setup_apppopuli import AppPopuliModel
-from .common import stub
+from .common import app
 
 
-@stub.function(
+@app.function(
     container_idle_timeout=300,
     timeout=600,
 )

@@ -1,7 +1,6 @@
-from modal import Stub, Image
+from modal import App, Image
 
 
-# Imagen que se utiliza en el servidor de modal
 image = (
     Image.debian_slim(python_version="3.10")
     .pip_install("pillow")
@@ -10,5 +9,4 @@ image = (
     .pip_install("protobuf==3.20")
 )
 
-# Aplicación que se despliega en modal
-stub = Stub(name="appPopuliModel", image=image)
+app = App(name="appPopuliModel", image=image)
