@@ -47,33 +47,27 @@ modal volume ls model-appPopuli model/
 
 y viendo que se encuentren los archivos ahí. Queremos que el volumen tenga una carpeta `model/` con los archivos dentro.
 
-2.- Crear aplicación con el modelo.
+2.- Desplegar la aplicación
 
 ```
-modal deploy setup_apppopuli.py
+modal deploy -m src.app
 ```
 
-Creará una aplicación en modal con el modelo.
-Si queremos probar el modelo (no despliega, solo ejecuta), podemos hacer:
+Desplegará tanto el modelo como la API en Modal.
+Si queremos probar el modelo sin desplegar (solo ejecuta), podemos hacer:
 
 ```
-modal run setup_apppopuli.py
+modal run -m src.setup_apppopuli
 ```
 
-esto ejecutará el main (el método que tiene el decorador `@stub.local_entrypoint()`) en la máquina de modal.
+esto ejecutará el main (el método que tiene el decorador `@app.local_entrypoint()`) en la máquina de modal.
 
-3.- Desplegar la API
-
-```
-modal deploy src.app
-```
-
-Podemos probar también a ejecutar la API sin hacer despligue con:
+Podemos probar también a ejecutar la API sin hacer despliegue con:
 
 ```
-modal serve src.app
+modal serve -m src.app
 ```
 
-y levantará la aplicación para hacer pruebas (cuidado con el tiempo de espera de la aplicación, si tardamos demasiado puede acabar la ejecución, ver `container_idle_timeout` en el stub)
+y levantará la aplicación para hacer pruebas (cuidado con el tiempo de espera de la aplicación, si tardamos demasiado puede acabar la ejecución, ver `scaledown_window` en la app)
 
-Si se ejecuta todo de forma correcta se desplegará la app y nos dará la url que podemos utilizar en el servicio de IA del fronend.
+Si se ejecuta todo de forma correcta se desplegará la app y nos dará la url que podemos utilizar en el servicio de IA del frontend.
